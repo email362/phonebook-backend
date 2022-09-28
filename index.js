@@ -69,14 +69,32 @@ app.delete('/api/persons/:id', (request, response) => {
 });
 
 app.post('/api/persons/', (request, response) => {
-  
-    const person = {
-        id: generateId(),
-        name: request.body.name,
-        number: request.body.number
-    };
-    persons = [...persons, person];
-    response.json(persons);
+ 
+    const duplicate = persons
+        .find(person => person.name === request.body.name);
+
+    const newName = request.body.name;
+
+    const newNumber = request.body.number;
+    
+    
+    if(duplicate || !newName.length > 0 || !newNumber.length > 0) {
+        response
+            .status(400)
+            .json({
+                error: `New Entries must have a unique name and a number`
+            });
+    } else {
+
+        const person = {
+            id: generateId(),
+            name: newName,
+            number: newNumber 
+        };
+
+        persons = [...persons, person];
+        response.json(persons);
+    }
 });
 
 const PORT = 3001;
