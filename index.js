@@ -38,12 +38,12 @@ const generateId = () => {
 
 
 app.get('/api/persons', (request, response) => {
-    response.json(persons);
+    return response.json(persons);
 });
 
 app.get('/info', (request, response) => {
     const currDate = new Date().toString(); 
-    response.send(`
+    return response.send(`
         <div> 
         <p>Phonebook has info for ${persons.length} people</p>
         <p>${currDate}</p>
@@ -56,7 +56,7 @@ app.get('/api/persons/:id',(request,response) => {
    
     const person = persons.find(person => person?.id === id);
     
-    person ? response.json(person) 
+    return person ? response.json(person) 
         : response.status(404).end(); 
 });
 
@@ -64,7 +64,7 @@ app.delete('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id);
     
     const person = persons.find(person => person.id === id);
-    person ? response.status(204).end()
+    return person ? response.status(204).end()
         : response.status(404).end();
 });
 
@@ -79,7 +79,7 @@ app.post('/api/persons/', (request, response) => {
     
     
     if(duplicate || !newName.length > 0 || !newNumber.length > 0) {
-        response
+        return response
             .status(400)
             .json({
                 error: `New Entries must have a unique name and a number`
@@ -93,7 +93,7 @@ app.post('/api/persons/', (request, response) => {
         };
 
         persons = [...persons, person];
-        response.json(persons);
+        return response.json(persons);
     }
 });
 
